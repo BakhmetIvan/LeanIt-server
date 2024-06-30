@@ -1,0 +1,12 @@
+package mate.leanitserver.dto.resource;
+
+import lombok.Data;
+
+@Data
+public class ResourceShortResponseDto {
+    private Long id;
+    private String title;
+    private String imageUrl;
+    private String content;
+    private String type;
+}
