@@ -7,6 +7,6 @@ public class VideoShortResponseDto {
     private Long id;
     private String title;
     private String imageUrl;
-    private String content;
+    private String description;
     private String type;
 }

@@ -7,6 +7,6 @@ public class ResourceFullResponseDto {
     private Long id;
     private String title;
     private String imageUrl;
-    private String content;
-    private String externalUrl;
+    private String description;
+    private String href;
 }

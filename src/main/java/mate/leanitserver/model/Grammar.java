@@ -6,16 +6,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -25,35 +20,18 @@ import org.hibernate.annotations.SQLRestriction;
 @RequiredArgsConstructor
 @Table(name = "grammars")
 @SQLDelete(sql = "UPDATE grammars SET is_deleted = TRUE WHERE id = ?")
-@SQLRestriction(value = "is_deleted = FALSE")
-public class Grammar implements Searchable {
+@SQLRestriction("is_deleted = FALSE")
+public class Grammar extends Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
-    private String title;
-    private String imageUrl;
     @ManyToOne
     @JoinColumn(name = "video_id", referencedColumnName = "id")
     private Video video;
-    @Lob
     @Column(nullable = false)
-    private String content;
-    @Column(nullable = false)
-    private String externalUrl;
-    @ManyToMany
-    @JoinTable(
-            name = "related_grammars",
-            joinColumns = @JoinColumn(name = "grammar_id"),
-            inverseJoinColumns = @JoinColumn(name = "related_grammar_id")
-    )
-    private List<Grammar> relatedTopics;
-    @ToString.Exclude
-    @Column(nullable = false)
-    private boolean isDeleted = false;
-
+    private String articleText;
     @Override
     public String getType() {
-        return "grammars";
+        return "grammar";
     }
 }

@@ -22,30 +22,15 @@ import org.hibernate.annotations.SQLRestriction;
 @RequiredArgsConstructor
 @Table(name = "videos")
 @SQLDelete(sql = "UPDATE videos SET is_deleted = TRUE WHERE id = ?")
-@SQLRestriction(value = "is_deleted = FALSE")
-public class Video implements Searchable {
+@SQLRestriction("is_deleted = FALSE")
+public class Video extends Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private String title;
-    private String imageUrl;
-    @Column(nullable = false)
     private String videoUrl;
-    @Column(nullable = false)
-    private String content;
-    @Column(nullable = false)
-    private String externalUrl;
-    @ManyToMany
-    @JoinTable(
-            name = "related_videos",
-            joinColumns = @JoinColumn(name = "video_id"),
-            inverseJoinColumns = @JoinColumn(name = "related_video_id")
-    )
-    private List<Video> relatedTopics;
-
     @Override
     public String getType() {
-        return "videos";
+        return "video";
     }
 }
