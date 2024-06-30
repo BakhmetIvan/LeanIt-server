@@ -30,6 +30,7 @@ public class Grammar extends Article {
     private Video video;
     @Column(nullable = false)
     private String articleText;
+
     @Override
     public String getType() {
         return "grammar";

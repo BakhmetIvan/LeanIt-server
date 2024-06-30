@@ -22,6 +22,7 @@ public class Resource extends Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Override
     public String getType() {
         return "resource";
