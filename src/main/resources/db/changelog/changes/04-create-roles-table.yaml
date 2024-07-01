@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-roles-table
+      author: bakhmetIvan
+      changes:
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: TRUE
+                  constraints:
+                    primaryKey: TRUE
+                    nullable: FALSE
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: FALSE
+                    unique: TRUE
+  - changeSet:
+      id: insert-roles-in-role-table
+      author: bakhmetIvan
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: "ROLE_USER"
