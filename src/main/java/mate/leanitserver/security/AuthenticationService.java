@@ -3,6 +3,7 @@ package mate.leanitserver.security;
 import lombok.RequiredArgsConstructor;
 import mate.leanitserver.dto.user.UserLoginDto;
 import mate.leanitserver.dto.user.UserLoginResponseDto;
+import mate.leanitserver.mapper.UserMapper;
 import mate.leanitserver.model.User;
 import mate.leanitserver.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +18,7 @@ public class AuthenticationService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     public UserLoginResponseDto authenticate(UserLoginDto requestDto) {
         final Authentication authentication = authenticationManager.authenticate(
@@ -27,6 +29,6 @@ public class AuthenticationService {
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "Can't find user by email: " + requestDto.getEmail()));
         String jwt = jwtUtil.generateToken(user);
-        return new UserLoginResponseDto(jwt);
+        return new UserLoginResponseDto(jwt, userMapper.toDto(user));
     }
 }
