@@ -68,3 +68,21 @@ databaseChangeLog:
               - column:
                   name: password
                   value: $2a$10$MAwqltC.JT6VwX88LF/u1OcYBzGlL.fchovWXhBD9lq0ajb0xRUEi
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: name
+                  value: "Admin"
+              - column:
+                  name: email
+                  value: "admin@gmail.com"
+              - column:
+                  name: is_deleted
+                  value: 0
+              - column:
+                  name: role_id
+                  value: 2
+              - column:
+                  name: password
+                  value: $2a$10$9Fd9FpY7GfNKAFpAQLHD8eipLZlA/5fHnJ4/rAYwWEBNenvEa3s5u
