@@ -6,4 +6,6 @@ public interface Searchable {
     String getTitle();
 
     String getType();
+
+    String getImageUrl();
 }
