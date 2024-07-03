@@ -2,6 +2,7 @@ FROM openjdk:17-jdk-alpine as builder
 WORKDIR Leanit-server
 RUN apk add --no-cache maven
 COPY . .
+RUN chmod +x ./mvnw
 RUN ./mvnw clean package -DskipTests
 RUN cp target/*.jar Leanit-server.jar && java -Djarmode=layertools -jar Leanit-server.jar extract
 
