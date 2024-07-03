@@ -1,8 +1,9 @@
 FROM openjdk:17-jdk-alpine as builder
 WORKDIR Leanit-server
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} Leanit-server.jar
-RUN java -Djarmode=layertools -jar Leanit-server.jar extract
+RUN apk add --no-cache maven
+COPY . .
+RUN ./mvnw clean package -DskipTests
+RUN cp target/*.jar Leanit-server.jar && java -Djarmode=layertools -jar Leanit-server.jar extract
 
 FROM openjdk:17-jdk-alpine
 WORKDIR Leanit-server
