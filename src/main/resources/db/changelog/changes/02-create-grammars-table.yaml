@@ -39,14 +39,11 @@ databaseChangeLog:
               - column:
                   name: video_id
                   type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_resource-user
+                    references: videos(id)
               - column:
                   name: article_text
                   type: TEXT
                   constraints:
                     nullable: false
-        - addForeignKeyConstraint:
-            baseTableName: grammars
-            baseColumnNames: video_id
-            constraintName: fk_grammar_video
-            referencedTableName: videos
-            referencedColumnNames: id
