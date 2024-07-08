@@ -3,6 +3,7 @@ package mate.leanitserver.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -43,8 +44,8 @@ public class AnkiController {
     @PostMapping("/{id}")
     @Operation(summary = "Add anki card to deck",
             description = "Allows a user to add a new anki card to a deck")
-    public void addAnkiCardToDeck(@PathVariable @Positive Long id) {
-        ankiService.addCardToDeck(id);
+    public void addAnkiCardToDeck(@PathVariable @Positive Long id, @NotBlank String deckName) {
+        ankiService.addCardToDeck(id, deckName);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

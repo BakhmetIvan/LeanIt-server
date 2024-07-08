@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AnkiServiceImpl implements AnkiService {
     private static final String ANKI_CONNECT_URL = "http://localhost:8765";
-    private static final String DECK_NAME = "Leanit deck";
     private static final String CARD_ADD_JSON_REQUEST = "{"
             + "\"action\": \"addNote\","
             + "\"version\": 6,"
@@ -63,9 +62,33 @@ public class AnkiServiceImpl implements AnkiService {
 
     @Transactional
     @Override
-    public void addCardToDeck(Long id) {
-        createDeck();
-        addCard(id);
+    public void addCardToDeck(Long id, String deckName) {
+        List<String> modelNames = checkModelNames();
+        if (modelNames.isEmpty()) {
+            throw new EntityNotFoundException("No models found in Anki.");
+        }
+        AnkiCard ankiCard = ankiRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(
+                        String.format(NOT_FOUND_ANKI_CARD_EXCEPTION, id))
+        );
+        String modelName = modelNames.get(1);
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(ANKI_CONNECT_URL))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(String.format(
+                        CARD_ADD_JSON_REQUEST,
+                        deckName,
+                        modelName,
+                        ankiCard.getFront(),
+                        ankiCard.getBack()))
+                )
+                .build();
+        try {
+            httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            throw new AnkiConnectException(NOT_CONNECT_ANKI_ERROR, e);
+        }
     }
 
     @Transactional
@@ -133,55 +156,6 @@ public class AnkiServiceImpl implements AnkiService {
             AnkiModelsDto modelNamesResponse =
                     objectMapper.readValue(response.body(), AnkiModelsDto.class);
             return modelNamesResponse.getResult();
-        } catch (IOException | InterruptedException e) {
-            throw new AnkiConnectException(NOT_CONNECT_ANKI_ERROR, e);
-        }
-    }
-
-    private void addCard(Long id) {
-        List<String> modelNames = checkModelNames();
-        if (modelNames.isEmpty()) {
-            throw new EntityNotFoundException("No models found in Anki.");
-        }
-        AnkiCard ankiCard = ankiRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(
-                        String.format(NOT_FOUND_ANKI_CARD_EXCEPTION, id))
-        );
-        String modelName = modelNames.get(1);
-        HttpClient httpClient = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(ANKI_CONNECT_URL))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(String.format(
-                        CARD_ADD_JSON_REQUEST,
-                        DECK_NAME,
-                        modelName,
-                        ankiCard.getFront(),
-                        ankiCard.getBack()))
-                )
-                .build();
-        try {
-            HttpResponse<String> response =
-                    httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.body());
-        } catch (IOException | InterruptedException e) {
-            throw new AnkiConnectException(NOT_CONNECT_ANKI_ERROR, e);
-        }
-    }
-
-    private void createDeck() {
-        HttpClient httpClient = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(ANKI_CONNECT_URL))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(String.format(
-                        CREATE_DECK_JSON_REQUEST, DECK_NAME))
-                )
-                .build();
-        try {
-            HttpResponse<String> response =
-                    httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.body());
         } catch (IOException | InterruptedException e) {
             throw new AnkiConnectException(NOT_CONNECT_ANKI_ERROR, e);
         }
