@@ -1,6 +1,8 @@
 package mate.leanitserver.dto.video;
 
+import java.util.List;
 import lombok.Data;
+import mate.leanitserver.dto.anki.internal.AnkiResponseDto;
 
 @Data
 public class VideoFullResponseDto {
@@ -10,4 +12,5 @@ public class VideoFullResponseDto {
     private String videoUrl;
     private String description;
     private String href;
+    private List<AnkiResponseDto> ankiCards;
 }

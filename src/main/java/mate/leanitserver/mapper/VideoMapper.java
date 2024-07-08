@@ -8,7 +8,7 @@ import mate.leanitserver.model.Video;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
-@Mapper(config = MapperConfig.class)
+@Mapper(config = MapperConfig.class, uses = AnkiMapper.class)
 public interface VideoMapper {
     VideoShortResponseDto toShortDto(Video video);
 
