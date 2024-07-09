@@ -2,7 +2,6 @@ package mate.leanitserver.repository;
 
 import java.util.List;
 import java.util.Optional;
-
 import mate.leanitserver.model.Resource;
 import mate.leanitserver.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
