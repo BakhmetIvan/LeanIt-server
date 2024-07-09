@@ -45,12 +45,21 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public ResourceFullResponseDto update(Long id, ResourceRequestDto requestDto) {
-        Resource resource = resourceRepository.findById(id).orElseThrow(
+    public ResourceFullResponseDto update(Long id, ResourceRequestDto requestDto, User user) {
+        Resource resource = resourceRepository.findByIdAndUser(id, user).orElseThrow(
                 () -> new EntityNotFoundException(String.format(
                         NOT_FOUND_RESOURCE_EXCEPTION, id))
         );
         resourceMapper.updateResourceFromDto(resource, requestDto);
         return resourceMapper.toFullDto(resourceRepository.save(resource));
+    }
+
+    @Override
+    public void delete(Long id) {
+        Resource resource = resourceRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(String.format(
+                        NOT_FOUND_RESOURCE_EXCEPTION, id))
+        );
+        resourceRepository.delete(resource);
     }
 }

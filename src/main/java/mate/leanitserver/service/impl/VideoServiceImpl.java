@@ -49,4 +49,13 @@ public class VideoServiceImpl implements VideoService {
         videoMapper.updateVideoFromDto(video, requestDto);
         return videoMapper.toFullDto(videoRepository.save(video));
     }
+
+    @Override
+    public void delete(Long id) {
+        Video video = videoRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(String.format(
+                        NOT_FOUND_VIDEO_EXCEPTION, id))
+        );
+        videoRepository.delete(video);
+    }
 }

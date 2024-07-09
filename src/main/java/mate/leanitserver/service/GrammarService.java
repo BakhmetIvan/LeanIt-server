@@ -14,4 +14,6 @@ public interface GrammarService {
     GrammarFullResponseDto save(GrammarRequestDto requestDto);
 
     GrammarFullResponseDto update(Long id, GrammarRequestDto requestDto);
+
+    void delete(Long id);
 }

@@ -49,4 +49,13 @@ public class GrammarServiceImpl implements GrammarService {
         grammarMapper.updateGrammarFromDto(grammar, requestDto);
         return grammarMapper.toFullDto(grammarRepository.save(grammar));
     }
+
+    @Override
+    public void delete(Long id) {
+        Grammar grammar = grammarRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(String.format(
+                        NOT_FOUND_GRAMMAR_EXCEPTION, id))
+        );
+        grammarRepository.delete(grammar);
+    }
 }
