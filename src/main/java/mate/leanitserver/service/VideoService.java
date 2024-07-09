@@ -14,4 +14,6 @@ public interface VideoService {
     VideoFullResponseDto save(VideoRequestDto requestDto);
 
     VideoFullResponseDto update(Long id, VideoRequestDto requestDto);
+
+    void delete(Long id);
 }

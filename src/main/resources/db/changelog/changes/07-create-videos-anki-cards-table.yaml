@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-videos-anki-cards-table
+      author: bakhmetIvan
+      changes:
+        - createTable:
+            tableName: videos_anki_cards
+            columns:
+              - column:
+                  name: video_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: anki_card_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: videos_anki_cards
+            baseColumnNames: video_id
+            referencedTableName: videos
+            referencedColumnNames: id
+            constraintName: fk_video_anki_card_user
+        - addForeignKeyConstraint:
+            baseTableName: videos_anki_cards
+            baseColumnNames: anki_card_id
+            referencedTableName: anki_cards
+            referencedColumnNames: id
+            constraintName: fk_video_anki_card_anki_card

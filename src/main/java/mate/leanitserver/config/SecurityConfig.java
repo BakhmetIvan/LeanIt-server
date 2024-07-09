@@ -43,6 +43,7 @@ public class SecurityConfig {
                                         "/videos/**",
                                         "/resources/**",
                                         "/search/**",
+                                        "/anki/**",
                                         "/swagger-ui/**")
                                 .permitAll()
                                 .anyRequest()

@@ -14,5 +14,7 @@ public interface ResourceService {
 
     ResourceFullResponseDto save(ResourceRequestDto requestDto, User user);
 
-    ResourceFullResponseDto update(Long id, ResourceRequestDto requestDto);
+    ResourceFullResponseDto update(Long id, ResourceRequestDto requestDto, User user);
+
+    void delete(Long id);
 }

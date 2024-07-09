@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-anki-cards-table
+      author: bakhmetIvan
+      changes:
+        - createTable:
+            tableName: anki_cards
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: image_url
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: front
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: back
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_deleted
+                  type: TINYINT(1)
+                  constraints:
+                    nullable: false

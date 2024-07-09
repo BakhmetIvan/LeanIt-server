@@ -1,6 +1,7 @@
 package mate.leanitserver.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import mate.leanitserver.dto.user.UserLoginDto;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
+@Tag(name = "Authentication controller", description = "Endpoints for register and login for users")
 public class AuthController {
     private final UserService userService;
     private final AuthenticationService authenticationService;

@@ -56,4 +56,13 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         body.put(ERROR_MESSAGE, ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
+
+    @ExceptionHandler(AnkiConnectException.class)
+    public ResponseEntity<Object> handleAnkiConnectException(AnkiConnectException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put(ERROR_OCCURRENCE_TIME, LocalDateTime.now());
+        body.put(ERROR_STATUS, HttpStatus.INTERNAL_SERVER_ERROR.value());
+        body.put(ERROR_MESSAGE, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+    }
 }
