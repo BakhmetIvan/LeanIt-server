@@ -3,6 +3,9 @@ package mate.leanitserver.service.impl;
 import lombok.RequiredArgsConstructor;
 import mate.leanitserver.dto.user.UserRegistrationDto;
 import mate.leanitserver.dto.user.UserResponseDto;
+import mate.leanitserver.dto.user.UserUpdateImageDto;
+import mate.leanitserver.dto.user.UserUpdateInfoDto;
+import mate.leanitserver.dto.user.UserUpdatePasswordDto;
 import mate.leanitserver.exception.EntityNotFoundException;
 import mate.leanitserver.exception.RegistrationException;
 import mate.leanitserver.mapper.UserMapper;
@@ -35,6 +38,29 @@ public class UserServiceImpl implements UserService {
                 () -> new EntityNotFoundException(String.format(
                         "can't find role by name: %s", Role.RoleName.ROLE_USER)))
         );
+        return userMapper.toDto(userRepository.save(user));
+    }
+
+    @Override
+    public UserResponseDto getInfo(User user) {
+        return userMapper.toDto(user);
+    }
+
+    @Override
+    public UserResponseDto updateInfo(User user, UserUpdateInfoDto userUpdateInfoDto) {
+        userMapper.userUpdateInfoFromDto(user, userUpdateInfoDto);
+        return userMapper.toDto(userRepository.save(user));
+    }
+
+    @Override
+    public UserResponseDto updatePassword(User user, UserUpdatePasswordDto updatePasswordDto) {
+        user.setPassword(passwordEncoder.encode(updatePasswordDto.getNewPassword()));
+        return userMapper.toDto(userRepository.save(user));
+    }
+
+    @Override
+    public UserResponseDto updateImage(User user, UserUpdateImageDto userUpdateImageDto) {
+        userMapper.userUpdateImageFromDto(user, userUpdateImageDto);
         return userMapper.toDto(userRepository.save(user));
     }
 }

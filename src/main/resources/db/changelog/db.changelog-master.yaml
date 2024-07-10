@@ -13,3 +13,5 @@ databaseChangeLog:
       file: db/changelog/changes/06-create-anki-cards-table.yaml
   - include:
       file: db/changelog/changes/07-create-videos-anki-cards-table.yaml
+  - include:
+      file: db/changelog/changes/08-change-image-in-user-table.yaml

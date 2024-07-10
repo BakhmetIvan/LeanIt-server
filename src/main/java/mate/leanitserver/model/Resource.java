@@ -31,6 +31,6 @@ public class Resource extends Article {
 
     @Override
     public String getType() {
-        return "resource";
+        return "resources";
     }
 }

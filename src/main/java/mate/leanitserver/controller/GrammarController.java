@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/grammars")
+@RequestMapping("/grammar")
 @Tag(name = "Grammar management", description = "Endpoint for grammar operations")
 public class GrammarController {
     private final GrammarService grammarService;
