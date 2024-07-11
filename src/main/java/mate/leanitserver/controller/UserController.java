@@ -4,12 +4,17 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import mate.leanitserver.dto.resource.ResourceShortResponseDto;
 import mate.leanitserver.dto.user.UserResponseDto;
 import mate.leanitserver.dto.user.UserUpdateImageDto;
 import mate.leanitserver.dto.user.UserUpdateInfoDto;
 import mate.leanitserver.dto.user.UserUpdatePasswordDto;
 import mate.leanitserver.model.User;
+import mate.leanitserver.service.ResourceService;
 import mate.leanitserver.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Profile management", description = "Endpoints for profile operations")
 public class UserController {
     private final UserService userService;
+    private final ResourceService resourceService;
 
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping
@@ -35,6 +41,16 @@ public class UserController {
     public UserResponseDto getInfo(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return userService.getInfo(user);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @GetMapping("/my-resources")
+    @Operation(summary = "Get user resources",
+            description = "Returns page of a resources created by current user")
+    public Page<ResourceShortResponseDto> getResources(Authentication authentication,
+                                                       @PageableDefault Pageable pageable) {
+        User user = (User) authentication.getPrincipal();
+        return resourceService.findAllByUser(user, pageable);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")

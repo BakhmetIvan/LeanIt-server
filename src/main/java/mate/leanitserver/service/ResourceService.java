@@ -12,6 +12,8 @@ public interface ResourceService {
 
     ResourceFullResponseDto findById(Long id);
 
+    Page<ResourceShortResponseDto> findAllByUser(User user, Pageable pageable);
+
     ResourceFullResponseDto save(ResourceRequestDto requestDto, User user);
 
     ResourceFullResponseDto update(Long id, ResourceRequestDto requestDto, User user);

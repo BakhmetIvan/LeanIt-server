@@ -36,6 +36,12 @@ public class ResourceServiceImpl implements ResourceService {
         );
     }
 
+    @Override
+    public Page<ResourceShortResponseDto> findAllByUser(User user, Pageable pageable) {
+        return resourceRepository.findAllByUser(user, pageable)
+                .map(resourceMapper::toShortDto);
+    }
+
     @Transactional
     @Override
     public ResourceFullResponseDto save(ResourceRequestDto requestDto, User user) {
