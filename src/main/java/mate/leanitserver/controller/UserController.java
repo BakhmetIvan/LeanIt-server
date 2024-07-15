@@ -3,26 +3,36 @@ package mate.leanitserver.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import mate.leanitserver.dto.favorite.FavoriteRequestDto;
+import mate.leanitserver.dto.favorite.FavoriteTypeRequestDto;
 import mate.leanitserver.dto.resource.ResourceShortResponseDto;
+import mate.leanitserver.dto.search.SearchResponseDto;
 import mate.leanitserver.dto.user.UserResponseDto;
 import mate.leanitserver.dto.user.UserUpdateImageDto;
 import mate.leanitserver.dto.user.UserUpdateInfoDto;
 import mate.leanitserver.dto.user.UserUpdatePasswordDto;
 import mate.leanitserver.model.User;
+import mate.leanitserver.service.FavoriteService;
 import mate.leanitserver.service.ResourceService;
 import mate.leanitserver.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @Validated
@@ -33,6 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserService userService;
     private final ResourceService resourceService;
+    private final FavoriteService favoriteService;
 
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping
@@ -51,6 +62,30 @@ public class UserController {
                                                        @PageableDefault Pageable pageable) {
         User user = (User) authentication.getPrincipal();
         return resourceService.findAllByUser(user, pageable);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @GetMapping("/favorites")
+    @Operation(summary = "Get user favorites",
+            description = "Returns page of a user favorites")
+    public Page<SearchResponseDto> getFavorites(
+            Authentication authentication,
+            @RequestBody @Valid FavoriteTypeRequestDto requestDto,
+            @PageableDefault Pageable pageable
+    ) {
+        User user = (User) authentication.getPrincipal();
+        return favoriteService.findAll(user, pageable, requestDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PostMapping("/favorites")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Add article to favorite",
+            description = "Endpoint for adding article to favorite")
+    public void addFavorite(Authentication authentication,
+                                           @RequestBody @Valid FavoriteRequestDto requestDto) {
+        User user = (User) authentication.getPrincipal();
+        favoriteService.addFavorite(user, requestDto);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
@@ -82,5 +117,16 @@ public class UserController {
                                           Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return userService.updateImage(user, updateImageDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @DeleteMapping("/favorite/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Delete user favorite",
+            description = "Endpoint for delete user`s favorite article")
+    public void deleteFavorite(Authentication authentication,
+                               @PathVariable @Positive Long id) {
+        User user = (User) authentication.getPrincipal();
+        favoriteService.delete(user, id);
     }
 }

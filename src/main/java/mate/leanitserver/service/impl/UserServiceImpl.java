@@ -16,6 +16,7 @@ import mate.leanitserver.repository.UserRepository;
 import mate.leanitserver.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
 
+    @Transactional
     @Override
     public UserResponseDto register(UserRegistrationDto requestDto) throws RegistrationException {
         if (userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
@@ -54,6 +56,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto updatePassword(User user, UserUpdatePasswordDto updatePasswordDto) {
+        userRepository.findByEmailAndPassword(
+                user.getEmail(),
+                updatePasswordDto.getOldPassword()).orElseThrow(
+                        () -> new EntityNotFoundException("Invalid password")
+        );
         user.setPassword(passwordEncoder.encode(updatePasswordDto.getNewPassword()));
         return userMapper.toDto(userRepository.save(user));
     }

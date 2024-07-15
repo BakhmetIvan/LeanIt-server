@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-favorites-table
+      author: bakhmetIvan
+      changes:
+        - createTable:
+            tableName: favorites
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: article_type_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: article_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: favorites
+            constraintName: fk_favorites_user
+            referencedColumnNames: id
+            referencedTableName: users

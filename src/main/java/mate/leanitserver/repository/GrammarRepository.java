@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface GrammarRepository extends JpaRepository<Grammar, Long> {
     @Query("SELECT g FROM Grammar g WHERE g.title LIKE %:title%")
     List<Grammar> findAllByTitle(String title);
+
+    List<Grammar> findAllByIdIn(List<Long> id);
 }

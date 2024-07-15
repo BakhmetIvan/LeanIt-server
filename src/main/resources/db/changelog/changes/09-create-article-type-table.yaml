@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-articles-types-table
+      author: bakhmetIvan
+      changes:
+        - createTable:
+            tableName: article_types
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+        - addUniqueConstraint:
+            columnNames: name
+            constraintName: uq_article_types_name
+            tableName: article_types

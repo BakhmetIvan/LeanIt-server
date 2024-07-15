@@ -28,9 +28,12 @@ public class Resource extends Article {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id")
     private User user;
+    @ManyToOne
+    @JoinColumn(name = "type_id", referencedColumnName = "id")
+    private ArticleType type;
 
     @Override
     public String getType() {
-        return "resources";
+        return type.getName().getValue();
     }
 }

@@ -18,4 +18,6 @@ public interface ResourceRepository extends JpaRepository<Resource, Long> {
     Optional<Resource> findByIdAndUser(Long id, User user);
 
     Page<Resource> findAllByUser(User user, Pageable pageable);
+
+    List<Resource> findAllByIdIn(List<Long> id);
 }

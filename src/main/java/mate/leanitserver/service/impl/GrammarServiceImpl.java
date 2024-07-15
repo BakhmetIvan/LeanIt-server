@@ -6,12 +6,15 @@ import mate.leanitserver.dto.grammar.GrammarRequestDto;
 import mate.leanitserver.dto.grammar.GrammarShortResponseDto;
 import mate.leanitserver.exception.EntityNotFoundException;
 import mate.leanitserver.mapper.GrammarMapper;
+import mate.leanitserver.model.ArticleType;
 import mate.leanitserver.model.Grammar;
+import mate.leanitserver.repository.ArticleTypeRepository;
 import mate.leanitserver.repository.GrammarRepository;
 import mate.leanitserver.service.GrammarService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +22,7 @@ public class GrammarServiceImpl implements GrammarService {
     private static final String NOT_FOUND_GRAMMAR_EXCEPTION = "Can't find grammar by id = %d";
     private final GrammarRepository grammarRepository;
     private final GrammarMapper grammarMapper;
+    private final ArticleTypeRepository articleTypeRepository;
 
     @Override
     public Page<GrammarShortResponseDto> findAll(Pageable pageable) {
@@ -37,9 +41,15 @@ public class GrammarServiceImpl implements GrammarService {
     @Override
     public GrammarFullResponseDto save(GrammarRequestDto requestDto) {
         Grammar grammar = grammarMapper.toModel(requestDto);
+        grammar.setType(articleTypeRepository
+                .findByName(ArticleType.ArticleName.GRAMMAR)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Can't find article type"))
+        );
         return grammarMapper.toFullDto(grammarRepository.save(grammar));
     }
 
+    @Transactional
     @Override
     public GrammarFullResponseDto update(Long id, GrammarRequestDto requestDto) {
         Grammar grammar = grammarRepository.findById(id).orElseThrow(
@@ -50,6 +60,7 @@ public class GrammarServiceImpl implements GrammarService {
         return grammarMapper.toFullDto(grammarRepository.save(grammar));
     }
 
+    @Transactional
     @Override
     public void delete(Long id) {
         Grammar grammar = grammarRepository.findById(id).orElseThrow(

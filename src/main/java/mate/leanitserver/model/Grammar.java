@@ -30,9 +30,12 @@ public class Grammar extends Article {
     private Video video;
     @Column(nullable = false)
     private String articleText;
+    @ManyToOne
+    @JoinColumn(name = "type_id", referencedColumnName = "id")
+    private ArticleType type;
 
     @Override
     public String getType() {
-        return "grammar";
+        return type.getName().getValue();
     }
 }
