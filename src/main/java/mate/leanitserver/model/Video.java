@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.List;
 import lombok.Getter;
@@ -38,9 +39,12 @@ public class Video extends Article {
             inverseJoinColumns = @JoinColumn(name = "anki_card_id")
     )
     private List<AnkiCard> ankiCards;
+    @ManyToOne
+    @JoinColumn(name = "type_id", referencedColumnName = "id")
+    private ArticleType type;
 
     @Override
     public String getType() {
-        return "video";
+        return type.getName().getValue();
     }
 }

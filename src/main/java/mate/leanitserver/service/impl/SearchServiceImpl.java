@@ -12,6 +12,7 @@ import mate.leanitserver.repository.ResourceRepository;
 import mate.leanitserver.repository.VideoRepository;
 import mate.leanitserver.service.SearchService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,7 @@ public class SearchServiceImpl implements SearchService {
     private final ResourceRepository resourceRepository;
     private final SearchMapper searchMapper;
 
+    @Transactional
     @Override
     public List<SearchResponseDto> findAllByTitle(String title) {
         List<Searchable> results = new ArrayList<>();

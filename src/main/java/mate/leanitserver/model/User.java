@@ -39,8 +39,9 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
     @ToString.Exclude
+    @Column(nullable = false)
     private String password;
-    private String imageUrl;
+    private Integer imageId;
     @ToString.Exclude
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Resource> resources;

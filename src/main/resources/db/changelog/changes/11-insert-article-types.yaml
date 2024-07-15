@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-article-types
+      author: bakhmetIvan
+      changes:
+        - insert:
+            tableName: article_types
+            columns:
+              - column:
+                  name: name
+                  value: GRAMMAR
+        - insert:
+            tableName: article_types
+            columns:
+              - column:
+                  name: name
+                  value: VIDEO
+        - insert:
+            tableName: article_types
+            columns:
+              - column:
+                  name: name
+                  value: RESOURCES

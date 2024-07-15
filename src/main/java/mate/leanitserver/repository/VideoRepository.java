@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface VideoRepository extends JpaRepository<Video, Long> {
     @Query("SELECT v FROM Video v WHERE v.title LIKE %:title%")
     List<Video> findAllByTitle(String title);
+
+    List<Video> findAllByIdIn(List<Long> id);
 }

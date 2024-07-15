@@ -13,3 +13,13 @@ databaseChangeLog:
       file: db/changelog/changes/06-create-anki-cards-table.yaml
   - include:
       file: db/changelog/changes/07-create-videos-anki-cards-table.yaml
+  - include:
+      file: db/changelog/changes/08-change-image-in-user-table.yaml
+  - include:
+      file: db/changelog/changes/09-create-article-type-table.yaml
+  - include:
+      file: db/changelog/changes/10-create-favorite-table.yaml
+  - include:
+      file: db/changelog/changes/11-insert-article-types.yaml
+  - include:
+      file: db/changelog/changes/12-add-type-id-to-videos-resources-grammars-tables.yaml

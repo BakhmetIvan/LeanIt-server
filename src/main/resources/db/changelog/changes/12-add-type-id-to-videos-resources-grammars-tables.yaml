@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-type-id-to-articles-tables
+      author: bakhmetIvan
+      changes:
+        - addColumn:
+            tableName: grammars
+            columns:
+              - column:
+                  name: type_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_grammars_type
+                    references: article_types(id)
+        - addColumn:
+            tableName: resources
+            columns:
+              - column:
+                  name: type_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_resources_type
+                    references: article_types(id)
+        - addColumn:
+            tableName: videos
+            columns:
+              - column:
+                  name: type_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_videos_type
+                    references: article_types(id)

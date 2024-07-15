@@ -19,11 +19,11 @@ public class UserRegistrationDto {
     @Length(max = 255, message = "Email can't be longer than 255")
     private String email;
     @NotBlank(message = "Password can't be blank")
-    @Length(min = 8, max = 150, message = "Password must be between 8 and 50 characters")
+    @Length(min = 8, max = 255, message = "Password must be between 8 and 255 characters")
     @ToString.Exclude
     private String password;
     @NotBlank(message = "Repeated password can't be blank")
-    @Length(min = 8, max = 150, message = "Password must be between 8 and 50 characters")
+    @Length(min = 8, max = 255, message = "Password must be between 8 and 255 characters")
     @ToString.Exclude
     private String repeatPassword;
 }
