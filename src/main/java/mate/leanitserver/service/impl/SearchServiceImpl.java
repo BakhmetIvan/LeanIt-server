@@ -11,6 +11,7 @@ import mate.leanitserver.repository.GrammarRepository;
 import mate.leanitserver.repository.ResourceRepository;
 import mate.leanitserver.repository.VideoRepository;
 import mate.leanitserver.service.SearchService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,13 +25,14 @@ public class SearchServiceImpl implements SearchService {
 
     @Transactional
     @Override
-    public List<SearchResponseDto> findAllByTitle(String title) {
+    public List<SearchResponseDto> findAllByTitle(String title, Pageable pageable) {
         List<Searchable> results = new ArrayList<>();
         results.addAll(grammarRepository.findAllByTitle(title));
         results.addAll(videoRepository.findAllByTitle(title));
         results.addAll(resourceRepository.findAllByTitle(title));
         return results.stream()
                 .sorted(Comparator.comparing(Searchable::getTitle))
+                .limit(pageable.getPageSize())
                 .map(searchMapper::toDto)
                 .toList();
     }
