@@ -44,7 +44,7 @@ public class SecurityConfig {
                                         "/resources/**",
                                         "/search/**",
                                         "/anki/**",
-                                        "/actuator/health",
+                                        "/actuator/**",
                                         "/swagger-ui/**")
                                 .permitAll()
                                 .anyRequest()
