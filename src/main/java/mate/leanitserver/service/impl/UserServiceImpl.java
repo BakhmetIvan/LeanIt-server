@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    private static final String USER_START_NAME = "User";
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
@@ -40,7 +41,10 @@ public class UserServiceImpl implements UserService {
                 () -> new EntityNotFoundException(String.format(
                         "can't find role by name: %s", Role.RoleName.ROLE_USER)))
         );
-        return userMapper.toDto(userRepository.save(user));
+        user = userRepository.save(user);
+        user.setName(USER_START_NAME + user.getId());
+        user = userRepository.save(user);
+        return userMapper.toDto(user);
     }
 
     @Override

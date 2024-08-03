@@ -65,4 +65,13 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         body.put(ERROR_MESSAGE, ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }
+
+    @ExceptionHandler(LoginException.class)
+    public ResponseEntity<Object> handleLoginException(LoginException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put(ERROR_OCCURRENCE_TIME, LocalDateTime.now());
+        body.put(ERROR_STATUS, HttpStatus.BAD_REQUEST.value());
+        body.put(ERROR_MESSAGE, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+    }
 }

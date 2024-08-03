@@ -7,6 +7,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mate.leanitserver.dto.search.SearchResponseDto;
 import mate.leanitserver.service.SearchService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +25,8 @@ public class SearchController {
     @GetMapping
     @Operation(summary = "Find all by title",
             description = "Find all by title among all entities")
-    public List<SearchResponseDto> findAllByTitle(@NotBlank String title) {
-        return searchService.findAllByTitle(title);
+    public List<SearchResponseDto> findAllByTitle(@NotBlank String title,
+                                                  @PageableDefault Pageable pageable) {
+        return searchService.findAllByTitle(title, pageable);
     }
 }

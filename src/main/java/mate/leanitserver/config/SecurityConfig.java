@@ -39,11 +39,12 @@ public class SecurityConfig {
                         auth -> auth
                                 .requestMatchers(
                                         "/auth/**",
-                                        "/grammars/**",
-                                        "/videos/**",
+                                        "/grammar/**",
+                                        "/video/**",
                                         "/resources/**",
                                         "/search/**",
                                         "/anki/**",
+                                        "/actuator/**",
                                         "/swagger-ui/**")
                                 .permitAll()
                                 .anyRequest()
