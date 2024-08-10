@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - changeSet:
+      id: update-grammar-table
+      author: bakhmetIvan
+      changes:
+        - dropColumn:
+            columnName: article_text
+            tableName: grammars
+        - addColumn:
+            tableName: grammars
+            columns:
+              - column:
+                  name: main_sub_title
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: second_title
+                  type: TEXT
+              - column:
+                  name: third_title
+                  type: TEXT
+              - column:
+                  name: third_sub_title
+                  type: TEXT
+              - column:
+                  name: fourth_title
+                  type: TEXT
+              - column:
+                  name: fourth_sub_title
+                  type: TEXT
+              - column:
+                  name: under_title_list
+                  type: TEXT

@@ -5,9 +5,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import mate.leanitserver.dto.resource.ResourceFullResponseDto;
 import mate.leanitserver.dto.resource.ResourceRequestDto;
-import mate.leanitserver.dto.resource.ResourceShortResponseDto;
+import mate.leanitserver.dto.resource.ResourceResponseDto;
 import mate.leanitserver.model.User;
 import mate.leanitserver.service.ResourceService;
 import org.springframework.data.domain.Page;
@@ -38,14 +37,14 @@ public class ResourceController {
     @GetMapping
     @Operation(summary = "Get all resources",
             description = "Retrieves all resources from the database")
-    public Page<ResourceShortResponseDto> findAll(@PageableDefault Pageable pageable) {
+    public Page<ResourceResponseDto> findAll(@PageableDefault Pageable pageable) {
         return resourceService.findAll(pageable);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get resource by id",
             description = "Retrieves a resource by id from the database")
-    public ResourceFullResponseDto findById(@PathVariable @Positive Long id) {
+    public ResourceResponseDto findById(@PathVariable @Positive Long id) {
         return resourceService.findById(id);
     }
 
@@ -53,8 +52,8 @@ public class ResourceController {
     @PostMapping
     @Operation(summary = "Save a new resource",
             description = "Allows a user and admin to save a new resource")
-    public ResourceFullResponseDto save(@Valid @RequestBody ResourceRequestDto requestDto,
-                                        Authentication authentication) {
+    public ResourceResponseDto save(@Valid @RequestBody ResourceRequestDto requestDto,
+                                    Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return resourceService.save(requestDto, user);
     }
@@ -63,9 +62,9 @@ public class ResourceController {
     @PutMapping("/{id}")
     @Operation(summary = "Update the resource by id",
             description = "Allows a user and admin to update the resource")
-    public ResourceFullResponseDto update(@PathVariable @Positive Long id,
-                                        @Valid @RequestBody ResourceRequestDto requestDto,
-                                          Authentication authentication) {
+    public ResourceResponseDto update(@PathVariable @Positive Long id,
+                                      @Valid @RequestBody ResourceRequestDto requestDto,
+                                      Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return resourceService.update(id, requestDto, user);
     }

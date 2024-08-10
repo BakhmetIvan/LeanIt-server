@@ -6,7 +6,7 @@ import mate.leanitserver.dto.anki.internal.AnkiResponseDto;
 import org.springframework.data.domain.Pageable;
 
 public interface AnkiService {
-    void addCardToDeck(Long id, String deckName);
+    void addCardToDeck(Long id);
 
     AnkiResponseDto save(AnkiRequestDto requestDto);
 

@@ -23,3 +23,7 @@ databaseChangeLog:
       file: db/changelog/changes/11-insert-article-types.yaml
   - include:
       file: db/changelog/changes/12-add-type-id-to-videos-resources-grammars-tables.yaml
+  - include:
+      file: db/changelog/changes/13-update-grammar-table.yaml
+  - include:
+      file: db/changelog/changes/14-remove-video-from-grammar.yaml

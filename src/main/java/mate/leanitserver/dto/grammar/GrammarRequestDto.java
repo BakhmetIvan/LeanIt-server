@@ -1,7 +1,7 @@
 package mate.leanitserver.dto.grammar;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -13,10 +13,15 @@ public class GrammarRequestDto {
     private String imageUrl;
     @NotBlank(message = "Description can't be blank")
     private String description;
-    @NotNull(message = "Video id can't be null")
-    private Long videoId;
-    @NotBlank(message = "Article text can't be blank")
-    private String articleText;
+    private String videoUrl;
+    @NotBlank(message = "Main sub title text can't be blank")
+    private String mainSubTitle;
+    private String secondTitle;
+    private String thirdTitle;
+    private String thirdSubTitle;
+    private String fourthTitle;
+    private String fourthSubTitle;
+    private List<String> underTitleList;
     @NotBlank(message = "External Url can't be blank")
     private String href;
 }

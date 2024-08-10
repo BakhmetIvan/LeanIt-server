@@ -53,16 +53,22 @@ public class AnkiServiceImpl implements AnkiService {
             + "\"action\": \"modelNames\","
             + "\"version\": 6"
             + "}";
+    private static final String DECK_NAMES_JSON_REQUEST = "{"
+            + "\"action\": \"deckNames\","
+            + "\"version\": 6"
+            + "}";
     private static final String NOT_FOUND_VIDEO_EXCEPTION = "Can't find video by id: %d";
     private static final String NOT_FOUND_ANKI_CARD_EXCEPTION = "Can't find anki card by id: %d";
     private static final String NOT_CONNECT_ANKI_ERROR = "Can't connect to anki";
+    private static final String DEFAULT_DECK_NAME = "Leanit deck";
     private final AnkiRepository ankiRepository;
     private final AnkiMapper ankiMapper;
     private final VideoRepository videoRepository;
 
     @Transactional
     @Override
-    public void addCardToDeck(Long id, String deckName) {
+    public void addCardToDeck(Long id) {
+        ensureDeckExists(DEFAULT_DECK_NAME);
         List<String> modelNames = checkModelNames();
         if (modelNames.isEmpty()) {
             throw new EntityNotFoundException("No models found in Anki.");
@@ -78,7 +84,7 @@ public class AnkiServiceImpl implements AnkiService {
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(String.format(
                         CARD_ADD_JSON_REQUEST,
-                        deckName,
+                        DEFAULT_DECK_NAME,
                         modelName,
                         ankiCard.getFront(),
                         ankiCard.getBack()))
@@ -142,21 +148,61 @@ public class AnkiServiceImpl implements AnkiService {
         ankiRepository.delete(ankiCard);
     }
 
-    public List<String> checkModelNames() {
-        ObjectMapper objectMapper = new ObjectMapper();
+    private void ensureDeckExists(String deckName) {
+        List<String> deckNames = checkDeckNames();
+        if (!deckNames.contains(deckName)) {
+            createDeck(deckName);
+        }
+    }
+
+    private void createDeck(String deckName) {
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(ANKI_CONNECT_URL))
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(MODEL_NAMES_JSON_REQUEST))
+                .POST(HttpRequest.BodyPublishers.ofString(
+                        String.format(CREATE_DECK_JSON_REQUEST, deckName)))
+                .build();
+        try {
+            httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            throw new AnkiConnectException(NOT_CONNECT_ANKI_ERROR, e);
+        }
+    }
+
+    private List<String> checkDeckNames() {
+        String response = sendRequestToAnki(DECK_NAMES_JSON_REQUEST);
+        return parseResponse(response);
+    }
+
+    public List<String> checkModelNames() {
+        String response = sendRequestToAnki(MODEL_NAMES_JSON_REQUEST);
+        return parseResponse(response);
+    }
+
+    private String sendRequestToAnki(String jsonRequest) {
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(ANKI_CONNECT_URL))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonRequest))
                 .build();
         try {
             HttpResponse<String> response =
                     httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            AnkiModelsDto modelNamesResponse =
-                    objectMapper.readValue(response.body(), AnkiModelsDto.class);
-            return modelNamesResponse.getResult();
+            return response.body();
         } catch (IOException | InterruptedException e) {
+            throw new AnkiConnectException(NOT_CONNECT_ANKI_ERROR, e);
+        }
+    }
+
+    private List<String> parseResponse(String response) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            AnkiModelsDto modelNamesResponse =
+                    objectMapper.readValue(response, AnkiModelsDto.class);
+            return modelNamesResponse.getResult();
+        } catch (IOException e) {
             throw new AnkiConnectException(NOT_CONNECT_ANKI_ERROR, e);
         }
     }

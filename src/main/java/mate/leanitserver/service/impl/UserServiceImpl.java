@@ -7,6 +7,7 @@ import mate.leanitserver.dto.user.UserUpdateImageDto;
 import mate.leanitserver.dto.user.UserUpdateInfoDto;
 import mate.leanitserver.dto.user.UserUpdatePasswordDto;
 import mate.leanitserver.exception.EntityNotFoundException;
+import mate.leanitserver.exception.InvalidPasswordException;
 import mate.leanitserver.exception.RegistrationException;
 import mate.leanitserver.mapper.UserMapper;
 import mate.leanitserver.model.Role;
@@ -60,11 +61,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto updatePassword(User user, UserUpdatePasswordDto updatePasswordDto) {
-        userRepository.findByEmailAndPassword(
-                user.getEmail(),
-                updatePasswordDto.getOldPassword()).orElseThrow(
-                        () -> new EntityNotFoundException("Invalid password")
-        );
+        if (!passwordEncoder.matches(updatePasswordDto.getOldPassword(), user.getPassword())) {
+            throw new InvalidPasswordException("Invalid password");
+        }
         user.setPassword(passwordEncoder.encode(updatePasswordDto.getNewPassword()));
         return userMapper.toDto(userRepository.save(user));
     }

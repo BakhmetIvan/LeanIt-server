@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import mate.leanitserver.dto.favorite.FavoriteRequestDto;
 import mate.leanitserver.dto.favorite.FavoriteTypeRequestDto;
-import mate.leanitserver.dto.resource.ResourceShortResponseDto;
+import mate.leanitserver.dto.resource.ResourceResponseDto;
 import mate.leanitserver.dto.search.SearchResponseDto;
 import mate.leanitserver.dto.user.UserResponseDto;
 import mate.leanitserver.dto.user.UserUpdateImageDto;
@@ -26,7 +26,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -58,8 +57,8 @@ public class UserController {
     @GetMapping("/my-resources")
     @Operation(summary = "Get user resources",
             description = "Returns page of a resources created by current user")
-    public Page<ResourceShortResponseDto> getResources(Authentication authentication,
-                                                       @PageableDefault Pageable pageable) {
+    public Page<ResourceResponseDto> getResources(Authentication authentication,
+                                                  @PageableDefault Pageable pageable) {
         User user = (User) authentication.getPrincipal();
         return resourceService.findAllByUser(user, pageable);
     }
@@ -99,7 +98,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
-    @PatchMapping("/update-password")
+    @PutMapping("/update-password")
     @Operation(summary = "Update user password",
             description = "Endpoint for update password for the current user")
     public UserResponseDto updatePassword(
@@ -110,7 +109,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
-    @PatchMapping("/update-image")
+    @PutMapping("/update-image")
     @Operation(summary = "Update user image",
             description = "Endpoint for update image for the current user")
     public UserResponseDto updateImage(@RequestBody @Valid UserUpdateImageDto updateImageDto,

@@ -3,10 +3,11 @@ package mate.leanitserver.dto.resource;
 import lombok.Data;
 
 @Data
-public class ResourceFullResponseDto {
+public class ResourceResponseDto {
     private Long id;
     private String title;
     private String imageUrl;
     private String description;
+    private String type;
     private String href;
 }
