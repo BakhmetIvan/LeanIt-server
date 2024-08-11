@@ -73,6 +73,11 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return buildError(ex, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(DuplicateException.class)
+    public ResponseEntity<Object> handlerDuplicateException(DuplicateException ex) {
+        return buildError(ex, HttpStatus.CONFLICT);
+    }
+
     private ResponseEntity<Object> buildError(Exception ex, HttpStatus status) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put(ERROR_OCCURRENCE_TIME, LocalDateTime.now());

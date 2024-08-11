@@ -3,10 +3,10 @@ package mate.leanitserver.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import mate.leanitserver.dto.favorite.FavoriteRequestDto;
-import mate.leanitserver.dto.favorite.FavoriteTypeRequestDto;
 import mate.leanitserver.dto.resource.ResourceResponseDto;
 import mate.leanitserver.dto.search.SearchResponseDto;
 import mate.leanitserver.dto.user.UserResponseDto;
@@ -17,6 +17,7 @@ import mate.leanitserver.model.User;
 import mate.leanitserver.service.FavoriteService;
 import mate.leanitserver.service.ResourceService;
 import mate.leanitserver.service.UserService;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -69,11 +70,11 @@ public class UserController {
             description = "Returns page of a user favorites")
     public Page<SearchResponseDto> getFavorites(
             Authentication authentication,
-            @RequestBody @Valid FavoriteTypeRequestDto requestDto,
+            @NotBlank @Length(max = 255) String type,
             @PageableDefault Pageable pageable
     ) {
         User user = (User) authentication.getPrincipal();
-        return favoriteService.findAll(user, pageable, requestDto);
+        return favoriteService.findAll(user, pageable, type);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")

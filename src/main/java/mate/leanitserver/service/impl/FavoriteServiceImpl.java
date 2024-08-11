@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mate.leanitserver.dto.favorite.FavoriteRequestDto;
-import mate.leanitserver.dto.favorite.FavoriteTypeRequestDto;
 import mate.leanitserver.dto.search.SearchResponseDto;
+import mate.leanitserver.exception.DuplicateException;
 import mate.leanitserver.exception.EntityNotFoundException;
 import mate.leanitserver.mapper.FavoriteMapper;
 import mate.leanitserver.mapper.SearchMapper;
@@ -43,7 +43,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     public void addFavorite(User user, FavoriteRequestDto requestDto) {
         Favorite favorite = favoriteMapper.toModel(requestDto);
         ArticleType articleType = articleTypeRepository.findByName(
-                ArticleType.ArticleName.valueOf(requestDto.getType())).orElseThrow(
+                ArticleType.ArticleName.valueOf(requestDto.getType().toUpperCase())).orElseThrow(
                                 () -> new EntityNotFoundException(
                                         String.format(
                                                 ARTICLE_TYPE_NOT_FOUND_EXCEPTION,
@@ -51,16 +51,20 @@ public class FavoriteServiceImpl implements FavoriteService {
         );
         favorite.setArticleType(articleType);
         favorite.setUser(user);
+        if (favoriteRepository.findByArticleIdAndArticleTypeAndUser(
+                favorite.getArticleId(),
+                favorite.getArticleType(),
+                user).isPresent()) {
+            throw new DuplicateException("Favorites already added");
+        }
         favoriteRepository.save(favorite);
     }
 
     @Transactional
     @Override
-    public Page<SearchResponseDto> findAll(User user,
-                                           Pageable pageable,
-                                           FavoriteTypeRequestDto requestDto) {
+    public Page<SearchResponseDto> findAll(User user, Pageable pageable, String type) {
         ArticleType.ArticleName articleTypeName =
-                ArticleType.ArticleName.valueOf(requestDto.getType().toUpperCase());
+                ArticleType.ArticleName.valueOf(type.toUpperCase());
         ArticleType articleType = articleTypeRepository.findByName(articleTypeName).orElseThrow(
                 () -> new EntityNotFoundException(
                         String.format(ARTICLE_TYPE_NOT_FOUND_EXCEPTION, articleTypeName))
@@ -68,7 +72,7 @@ public class FavoriteServiceImpl implements FavoriteService {
         List<Long> ids = favoriteRepository
                 .findAllByUserAndArticleType(user, pageable, articleType).stream()
                 .filter(favorite -> favorite.getArticleType().equals(articleType))
-                .map(Favorite::getId)
+                .map(Favorite::getArticleId)
                 .toList();
         List<Searchable> results = new ArrayList<>();
         switch (articleTypeName) {
@@ -97,7 +101,10 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Transactional
     @Override
     public void delete(User user, Long id) {
-        Favorite favorite = favoriteRepository.findByIdAndUser(id, user);
+        Favorite favorite = favoriteRepository.findByIdAndUser(id, user).orElseThrow(
+                () -> new EntityNotFoundException(
+                        String.format("Can't find favorite by id: %d", id))
+        );
         favoriteRepository.delete(favorite);
     }
 }
