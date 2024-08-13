@@ -7,6 +7,8 @@ public interface Searchable {
 
     String getDescription();
 
+    String getHref();
+
     String getType();
 
     String getImageUrl();

@@ -1,10 +1,11 @@
-package mate.leanitserver.dto.search;
+package mate.leanitserver.dto.favorite;
 
 import lombok.Data;
 
 @Data
-public class SearchResponseDto {
+public class FavoriteResponseDto {
     private Long id;
+    private Long favoriteId;
     private String title;
     private String description;
     private String href;

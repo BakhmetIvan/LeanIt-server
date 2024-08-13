@@ -1,9 +1,8 @@
 package mate.leanitserver.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import mate.leanitserver.dto.resource.ResourceFullResponseDto;
 import mate.leanitserver.dto.resource.ResourceRequestDto;
-import mate.leanitserver.dto.resource.ResourceShortResponseDto;
+import mate.leanitserver.dto.resource.ResourceResponseDto;
 import mate.leanitserver.exception.EntityNotFoundException;
 import mate.leanitserver.mapper.ResourceMapper;
 import mate.leanitserver.model.ArticleType;
@@ -26,28 +25,28 @@ public class ResourceServiceImpl implements ResourceService {
     private final ArticleTypeRepository articleTypeRepository;
 
     @Override
-    public Page<ResourceShortResponseDto> findAll(Pageable pageable) {
+    public Page<ResourceResponseDto> findAll(Pageable pageable) {
         return resourceRepository.findAll(pageable)
-                .map(resourceMapper::toShortDto);
+                .map(resourceMapper::toDto);
     }
 
     @Override
-    public ResourceFullResponseDto findById(Long id) {
-        return resourceMapper.toFullDto(resourceRepository.findById(id).orElseThrow(
+    public ResourceResponseDto findById(Long id) {
+        return resourceMapper.toDto(resourceRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(String.format(
                         NOT_FOUND_RESOURCE_EXCEPTION, id)))
         );
     }
 
     @Override
-    public Page<ResourceShortResponseDto> findAllByUser(User user, Pageable pageable) {
+    public Page<ResourceResponseDto> findAllByUser(User user, Pageable pageable) {
         return resourceRepository.findAllByUser(user, pageable)
-                .map(resourceMapper::toShortDto);
+                .map(resourceMapper::toDto);
     }
 
     @Transactional
     @Override
-    public ResourceFullResponseDto save(ResourceRequestDto requestDto, User user) {
+    public ResourceResponseDto save(ResourceRequestDto requestDto, User user) {
         Resource resource = resourceMapper.toModel(requestDto);
         resource.setUser(user);
         resource.setType(articleTypeRepository
@@ -55,18 +54,18 @@ public class ResourceServiceImpl implements ResourceService {
                 .orElseThrow(
                         () -> new EntityNotFoundException("Can't find article type"))
         );
-        return resourceMapper.toFullDto(resourceRepository.save(resource));
+        return resourceMapper.toDto(resourceRepository.save(resource));
     }
 
     @Transactional
     @Override
-    public ResourceFullResponseDto update(Long id, ResourceRequestDto requestDto, User user) {
+    public ResourceResponseDto update(Long id, ResourceRequestDto requestDto, User user) {
         Resource resource = resourceRepository.findByIdAndUser(id, user).orElseThrow(
                 () -> new EntityNotFoundException(String.format(
                         NOT_FOUND_RESOURCE_EXCEPTION, id))
         );
         resourceMapper.updateResourceFromDto(resource, requestDto);
-        return resourceMapper.toFullDto(resourceRepository.save(resource));
+        return resourceMapper.toDto(resourceRepository.save(resource));
     }
 
     @Transactional

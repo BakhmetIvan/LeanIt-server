@@ -50,28 +50,39 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException ex) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put(ERROR_OCCURRENCE_TIME, LocalDateTime.now());
-        body.put(ERROR_STATUS, HttpStatus.NOT_FOUND.value());
-        body.put(ERROR_MESSAGE, ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+        return buildError(ex, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(AnkiConnectException.class)
     public ResponseEntity<Object> handleAnkiConnectException(AnkiConnectException ex) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put(ERROR_OCCURRENCE_TIME, LocalDateTime.now());
-        body.put(ERROR_STATUS, HttpStatus.INTERNAL_SERVER_ERROR.value());
-        body.put(ERROR_MESSAGE, ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+        return buildError(ex, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(LoginException.class)
     public ResponseEntity<Object> handleLoginException(LoginException ex) {
+        return buildError(ex, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RegistrationException.class)
+    public ResponseEntity<Object> handleRegistrationException(RegistrationException ex) {
+        return buildError(ex, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<Object> handlerInvalidPasswordException(InvalidPasswordException ex) {
+        return buildError(ex, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DuplicateException.class)
+    public ResponseEntity<Object> handlerDuplicateException(DuplicateException ex) {
+        return buildError(ex, HttpStatus.CONFLICT);
+    }
+
+    private ResponseEntity<Object> buildError(Exception ex, HttpStatus status) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put(ERROR_OCCURRENCE_TIME, LocalDateTime.now());
-        body.put(ERROR_STATUS, HttpStatus.BAD_REQUEST.value());
+        body.put(ERROR_STATUS, status);
         body.put(ERROR_MESSAGE, ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+        return ResponseEntity.status(status).body(body);
     }
 }

@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 14-remove-foreign-key-and-video-id
+      author: bakhmetIvan
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: grammars
+            constraintName: fk_resource-user
+        - dropColumn:
+            columnName: video_id
+            tableName: grammars
+        - addColumn:
+            tableName: grammars
+            columns:
+              - column:
+                  name: video_url
+                  type: varchar(255)
