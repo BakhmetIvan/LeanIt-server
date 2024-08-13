@@ -3,12 +3,11 @@ package mate.leanitserver.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import mate.leanitserver.dto.favorite.FavoriteRequestDto;
+import mate.leanitserver.dto.favorite.FavoriteResponseDto;
 import mate.leanitserver.dto.resource.ResourceResponseDto;
-import mate.leanitserver.dto.search.SearchResponseDto;
 import mate.leanitserver.dto.user.UserResponseDto;
 import mate.leanitserver.dto.user.UserUpdateImageDto;
 import mate.leanitserver.dto.user.UserUpdateInfoDto;
@@ -17,7 +16,6 @@ import mate.leanitserver.model.User;
 import mate.leanitserver.service.FavoriteService;
 import mate.leanitserver.service.ResourceService;
 import mate.leanitserver.service.UserService;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -32,6 +30,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -68,9 +67,9 @@ public class UserController {
     @GetMapping("/favorites")
     @Operation(summary = "Get user favorites",
             description = "Returns page of a user favorites")
-    public Page<SearchResponseDto> getFavorites(
+    public Page<FavoriteResponseDto> getFavorites(
             Authentication authentication,
-            @NotBlank @Length(max = 255) String type,
+            @RequestParam String type,
             @PageableDefault Pageable pageable
     ) {
         User user = (User) authentication.getPrincipal();
@@ -120,7 +119,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
-    @DeleteMapping("/favorite/{id}")
+    @DeleteMapping("/favorites/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete user favorite",
             description = "Endpoint for delete user`s favorite article")
