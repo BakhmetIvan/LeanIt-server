@@ -22,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    private static final String EMAIL_ALREADY_EXIST_EXCEPTION = "Email already registered: %s";
+    private static final String ROLE_NOT_FOUND_EXCEPTION = "Can't find role by name: %s";
+    private static final String INVALID_PASSWORD_EXCEPTION = "Invalid password";
     private static final String USER_START_NAME = "User";
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -33,14 +36,14 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto register(UserRegistrationDto requestDto) throws RegistrationException {
         if (userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
             throw new RegistrationException(String.format(
-                    "Email already registered: %s", requestDto.getEmail())
+                    EMAIL_ALREADY_EXIST_EXCEPTION, requestDto.getEmail())
             );
         }
         User user = userMapper.toModel(requestDto);
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         user.setRole(roleRepository.findByName(Role.RoleName.ROLE_USER).orElseThrow(
                 () -> new EntityNotFoundException(String.format(
-                        "can't find role by name: %s", Role.RoleName.ROLE_USER)))
+                        ROLE_NOT_FOUND_EXCEPTION, Role.RoleName.ROLE_USER)))
         );
         user = userRepository.save(user);
         user.setName(USER_START_NAME + user.getId());
@@ -62,7 +65,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto updatePassword(User user, UserUpdatePasswordDto updatePasswordDto) {
         if (!passwordEncoder.matches(updatePasswordDto.getOldPassword(), user.getPassword())) {
-            throw new InvalidPasswordException("Invalid password");
+            throw new InvalidPasswordException(INVALID_PASSWORD_EXCEPTION);
         }
         user.setPassword(passwordEncoder.encode(updatePasswordDto.getNewPassword()));
         return userMapper.toDto(userRepository.save(user));

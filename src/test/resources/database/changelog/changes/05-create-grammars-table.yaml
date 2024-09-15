@@ -1,0 +1,71 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-grammar-table
+      author: bakhmetIvan
+      changes:
+        - createTable:
+            tableName: grammars
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: image_url
+                  type: TEXT
+              - column:
+                  name: description
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: href
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_deleted
+                  type: TINYINT(1)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_grammars_type
+                    references: article_types(id)
+              - column:
+                  name: main_sub_title
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: second_title
+                  type: TEXT
+              - column:
+                  name: third_title
+                  type: TEXT
+              - column:
+                  name: third_sub_title
+                  type: TEXT
+              - column:
+                  name: fourth_title
+                  type: TEXT
+              - column:
+                  name: fourth_sub_title
+                  type: TEXT
+              - column:
+                  name: under_title_list
+                  type: TEXT
+              - column:
+                  name: video_url
+                  type: VARCHAR(255)

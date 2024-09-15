@@ -34,6 +34,7 @@ public class AnkiController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Save a new anki card",
             description = "Allows an admin to save a new anki card")
     public AnkiResponseDto save(@RequestBody @Valid AnkiRequestDto requestDto) {

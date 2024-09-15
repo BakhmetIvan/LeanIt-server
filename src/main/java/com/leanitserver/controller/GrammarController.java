@@ -49,6 +49,7 @@ public class GrammarController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Save a new grammar",
             description = "Allows a user to save a new grammar")
     public GrammarFullResponseDto save(@Valid @RequestBody GrammarRequestDto requestDto) {

@@ -50,6 +50,7 @@ public class ResourceController {
 
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Save a new resource",
             description = "Allows a user and admin to save a new resource")
     public ResourceResponseDto save(@Valid @RequestBody ResourceRequestDto requestDto,

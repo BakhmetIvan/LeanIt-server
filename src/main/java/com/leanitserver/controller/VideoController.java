@@ -49,6 +49,7 @@ public class VideoController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Save a new video",
             description = "Allows a user to save a new video")
     public VideoFullResponseDto save(@Valid @RequestBody VideoRequestDto requestDto) {
