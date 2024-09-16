@@ -1,0 +1,2 @@
+DELETE FROM resources;
+ALTER TABLE resources AUTO_INCREMENT = 1;

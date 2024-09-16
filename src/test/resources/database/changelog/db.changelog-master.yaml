@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - include:
+      file: database/changelog/changes/01-create-roles-table.yaml
+  - include:
+      file: database/changelog/changes/02-create-users-table.yaml
+  - include:
+      file: database/changelog/changes/03-create-article-type-table.yaml
+  - include:
+      file: database/changelog/changes/04-create-videos-table.yaml
+  - include:
+      file: database/changelog/changes/05-create-grammars-table.yaml
+  - include:
+      file: database/changelog/changes/06-create-resources-table.yaml
+  - include:
+      file: database/changelog/changes/07-create-anki-cards-table.yaml
+  - include:
+      file: database/changelog/changes/08-create-videos-anki-cards-table.yaml
+  - include:
+      file: database/changelog/changes/09-create-favorite-table.yaml

@@ -1,0 +1,46 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-users-table
+      author: bakhmetIvan
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: TRUE
+                  constraints:
+                    primaryKey: TRUE
+                    nullable: FALSE
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: FALSE
+                    unique: TRUE
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: FALSE
+              - column:
+                  name: role_id
+                  type: BIGINT
+                  constraints:
+                    nullable: TRUE
+                    foreignKeyName: fk_user_role
+                    references: roles(id)
+              - column:
+                  name: is_deleted
+                  type: TINYINT(1)
+                  constraints:
+                    nullable: FALSE
+              - column:
+                  name: image_id
+                  type: INT
+                  constraints:
+                    nullable: TRUE
